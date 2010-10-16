@@ -96,17 +96,25 @@
 }
 
 
--(void)startRequestWithLogin:(NSString *)login password:(NSString *)password {
+
+
+- (void)authorizationFormValidate:(SHKFormController *)form {
 	
 	
 	if (!quiet) {
 		[[SHKActivityIndicator currentIndicator] displayActivity:@"Aktualizacja Blipa"];
 	}
-		
+	
+	NSDictionary *formValues = [form formValues];
+
+	//NSLog([item customValueForKey:@"username"]);
+	//NSLog([pendingForm valueForKey:@"username"]);
+	
 	NSString *whatToShare;
 	
 	if (item.URL != nil) {
 		
+		NSLog(@"url not nil");
 		NSURL *url = item.URL;
 		
 		whatToShare = [url relativeString];
@@ -121,7 +129,7 @@
 	}
 	
 	
-	NSString *authHeader = [NSString stringWithFormat:@"%@:%@", login, password];
+	NSString *authHeader = [NSString stringWithFormat:@"%@:%@", [formValues valueForKey:@"user"], [formValues valueForKey:@"pass"]];
 	NSData *authData = [authHeader dataUsingEncoding:NSUTF8StringEncoding];
 	NSString *base64EncodedString = [authData base64EncodedString];
 	NSURL *url = [NSURL URLWithString:@"http://api.blip.pl/updates"];
@@ -130,7 +138,7 @@
 								 isFinishedSelector:@selector(sendFinished:) 
 											 method:@"POST" 
 										  autostart:NO] autorelease];
-	
+		
 	
 	NSDictionary *headers = [NSDictionary dictionaryWithObjectsAndKeys:@"0.02", @"X-Blip-API", @"ShareKit iPhone", @"User-Agent", [NSString stringWithFormat:@"Basic %@", base64EncodedString], @"Authorization",
 							 @"application/json", @"Accept", nil];
@@ -139,38 +147,6 @@
 	
 	[request start];
 	
-	[self sendDidStart];
-	
-	
-	
-}
-
-
-- (BOOL)send {
-	
-
-	if ([self validateItem]) {
-		
-		
-		[self startRequestWithLogin:[self getAuthValueForKey:@"user"] password:[self getAuthValueForKey:@"pass"]];		
-		
-	}
-	
-	
-}
-
-
-
-- (void)authorizationFormValidate:(SHKFormController *)form {
-	
-	
-	if (!quiet) {
-		[[SHKActivityIndicator currentIndicator] displayActivity:@"Aktualizacja Blipa"];
-	}
-	
-	NSDictionary *formValues = [form formValues];
-
-	[self startRequestWithLogin:[formValues valueForKey:@"user"] password:[formValues valueForKey:@"pass"]];
 	
 	
 	
@@ -181,37 +157,31 @@
 
 -(void)sendFinished:(SHKRequest *)request {
 	
-	NSLog([request getResult]);
-	
 	[[SHKActivityIndicator currentIndicator] hide];
 	
 	if (self.request.success) {
 		
+		[pendingForm saveForm];
 		
-		[self sendDidFinish];		
 		
 	}
 	
 	else {
 		
-		NSString *msg;
-		
-		if ([[request getResult] isEqualToString:@"401 Unauthorized"]) {
+		if (self.request.success) {
 			
-			msg = [NSString stringWithString:@"Błędne dane logowania!"];
+			UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Błąd" 
+															message:@"Status zaktualizowany pomyślnie!" 
+														   delegate:nil 
+												  cancelButtonTitle:@"OK" 
+												  otherButtonTitles:nil];
+			[alert show];
+			[alert release];
+			
 			
 		}
-		
-		else {
-			
-			msg = [NSString stringWithString:@"Próba połączenia z serwisem blip.pl nieudana."];
-			
-		}
-
-		
-		
 		UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Błąd" 
-								   message:msg
+								   message:@"Nastąpił błąd z połączeniem do serwisu blip.pl." 
 								  delegate:nil 
 						 cancelButtonTitle:@"OK" 
 						 otherButtonTitles:nil];
@@ -222,7 +192,7 @@
 
 	
 
-	[self dismissModalViewControllerAnimated:YES];
+	//NSLog([request getResult]);
 	
 	
 }
