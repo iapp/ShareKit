@@ -46,8 +46,10 @@
 	NSMutableData *data;
 	NSString *result;
 	BOOL success;
+	BOOL blipSharing;
 }
 
+@property (readwrite) BOOL blipSharing;
 @property (retain) NSURL *url;
 @property (retain) NSString *params;
 @property (retain) NSString *method;

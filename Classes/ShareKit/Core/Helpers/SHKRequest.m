@@ -36,6 +36,7 @@
 @synthesize delegate, isFinishedSelector;
 @synthesize data, result, headers, response, connection;
 @synthesize success;
+@synthesize blipSharing;
 
 - (void)dealloc
 {
@@ -82,7 +83,10 @@
 	
 	// overwrite header fields (generally for cookies)
 	if (headerFields != nil)
+		
 		[request setAllHTTPHeaderFields:headerFields];	
+		
+	
 	
 	// Setup Request Data/Params
 	if (params != nil)
