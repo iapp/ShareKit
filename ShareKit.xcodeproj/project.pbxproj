@@ -7,8 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		141ADA63126A3AB400730B77 /* NSData+Base64.m in Sources */ = {isa = PBXBuildFile; fileRef = 141ADA60126A3AB400730B77 /* NSData+Base64.m */; };
-		141ADA64126A3AB400730B77 /* SHKBlip.m in Sources */ = {isa = PBXBuildFile; fileRef = 141ADA62126A3AB400730B77 /* SHKBlip.m */; };
+		141ADAAC126A449B00730B77 /* NSData+Base64.m in Sources */ = {isa = PBXBuildFile; fileRef = 141ADAA9126A449B00730B77 /* NSData+Base64.m */; };
+		141ADAAD126A449B00730B77 /* SHKBlip.m in Sources */ = {isa = PBXBuildFile; fileRef = 141ADAAB126A449B00730B77 /* SHKBlip.m */; };
 		1D60589B0D05DD56006BFB54 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 29B97316FDCFA39411CA2CEA /* main.m */; };
 		1D60589F0D05DD5A006BFB54 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1D30AB110D05D00D00671497 /* Foundation.framework */; };
 		1DF5F4E00D08C38300B7A737 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1DF5F4DF0D08C38300B7A737 /* UIKit.framework */; };
@@ -93,10 +93,10 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		141ADA5F126A3AB400730B77 /* NSData+Base64.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSData+Base64.h"; sourceTree = "<group>"; };
-		141ADA60126A3AB400730B77 /* NSData+Base64.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSData+Base64.m"; sourceTree = "<group>"; };
-		141ADA61126A3AB400730B77 /* SHKBlip.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SHKBlip.h; sourceTree = "<group>"; };
-		141ADA62126A3AB400730B77 /* SHKBlip.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SHKBlip.m; sourceTree = "<group>"; };
+		141ADAA8126A449B00730B77 /* NSData+Base64.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "NSData+Base64.h"; path = "Blip/NSData+Base64.h"; sourceTree = "<group>"; };
+		141ADAA9126A449B00730B77 /* NSData+Base64.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "NSData+Base64.m"; path = "Blip/NSData+Base64.m"; sourceTree = "<group>"; };
+		141ADAAA126A449B00730B77 /* SHKBlip.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SHKBlip.h; path = Blip/SHKBlip.h; sourceTree = "<group>"; };
+		141ADAAB126A449B00730B77 /* SHKBlip.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SHKBlip.m; path = Blip/SHKBlip.m; sourceTree = "<group>"; };
 		1D30AB110D05D00D00671497 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		1D6058910D05DD3D006BFB54 /* ShareKit.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ShareKit.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		1DF5F4DF0D08C38300B7A737 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
@@ -283,10 +283,10 @@
 		141AD8C51267AE7800730B77 /* Blip */ = {
 			isa = PBXGroup;
 			children = (
-				141ADA5F126A3AB400730B77 /* NSData+Base64.h */,
-				141ADA60126A3AB400730B77 /* NSData+Base64.m */,
-				141ADA61126A3AB400730B77 /* SHKBlip.h */,
-				141ADA62126A3AB400730B77 /* SHKBlip.m */,
+				141ADAA8126A449B00730B77 /* NSData+Base64.h */,
+				141ADAA9126A449B00730B77 /* NSData+Base64.m */,
+				141ADAAA126A449B00730B77 /* SHKBlip.h */,
+				141ADAAB126A449B00730B77 /* SHKBlip.m */,
 			);
 			name = Blip;
 			sourceTree = "<group>";
@@ -884,8 +884,8 @@
 				43C91DF511EBAE4800F31FAE /* SHKTumblr.m in Sources */,
 				43B934B511FE682600C9D3F3 /* SHKFBStreamDialog.m in Sources */,
 				432B147C11FF4B0700291B37 /* SHKPhotoAlbum.m in Sources */,
-				141ADA63126A3AB400730B77 /* NSData+Base64.m in Sources */,
-				141ADA64126A3AB400730B77 /* SHKBlip.m in Sources */,
+				141ADAAC126A449B00730B77 /* NSData+Base64.m in Sources */,
+				141ADAAD126A449B00730B77 /* SHKBlip.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

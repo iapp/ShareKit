@@ -1,10 +1,27 @@
 //
-//  SHKBlip.m
+//  SHKBlip.h
 //  ShareKit
 //
-//  Created by Tuszy on 10/14/10.
-//  Copyright 2010 __MyCompanyName__. All rights reserved.
+//  Created by Michał Tuszyński on 10/14/10.
+//  Copyright 2010 iapp.pl. All rights reserved.
 //
+//  Permission is hereby granted, free of charge, to any person obtaining a copy
+//  of this software and associated documentation files (the "Software"), to deal
+//  in the Software without restriction, including without limitation the rights
+//  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+//  copies of the Software, and to permit persons to whom the Software is
+//  furnished to do so, subject to the following conditions:
+//
+//  The above copyright notice and this permission notice shall be included in
+//  all copies or substantial portions of the Software.
+//
+//  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+//  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+//  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+//  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+//  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+//  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+//  THE SOFTWARE.
 
 #import "SHKBlip.h"
 #import "NSData+Base64.h"
@@ -25,11 +42,11 @@
 
 // If the action can handle URLs, uncomment this section
 
- + (BOOL)canShareURL
- {
- return YES;
- }
- 
++ (BOOL)canShareURL
+{
+	return YES;
+}
+
 
 // If the action can handle images, uncomment this section
 /*
@@ -41,11 +58,11 @@
 
 // If the action can handle text, uncomment this section
 
- + (BOOL)canShareText
- {
- return YES;
- }
- 
++ (BOOL)canShareText
+{
+	return YES;
+}
+
 
 // If the action can handle files, uncomment this section
 /*
@@ -77,7 +94,7 @@
 	// See http://getsharekit.com/docs/#forms for documentation on creating forms
 	
 	// This example form shows a username and password and stores them by the keys 'username' and 'password'.
-
+	
 	return [NSArray arrayWithObjects:
 			[SHKFormFieldSettings label:@"Login" key:@"user" type:SHKFormFieldTypeText start:nil],
 			[SHKFormFieldSettings label:@"Hasło" key:@"pass" type:SHKFormFieldTypePassword start:nil],			
@@ -87,34 +104,26 @@
 
 + (NSString *)authorizationFormCaption {
 	
-
+	
 	
 	
 	return SHKLocalizedString(@"Załóż darmowe konto @ %@", @"www.blip.pl");
-
+	
 	
 }
 
 
-
-
-- (void)authorizationFormValidate:(SHKFormController *)form {
+-(void)startRequestWithLogin:(NSString *)login password:(NSString *)password {
 	
 	
 	if (!quiet) {
 		[[SHKActivityIndicator currentIndicator] displayActivity:@"Aktualizacja Blipa"];
 	}
 	
-	NSDictionary *formValues = [form formValues];
-
-	//NSLog([item customValueForKey:@"username"]);
-	//NSLog([pendingForm valueForKey:@"username"]);
-	
 	NSString *whatToShare;
 	
 	if (item.URL != nil) {
 		
-		NSLog(@"url not nil");
 		NSURL *url = item.URL;
 		
 		whatToShare = [url relativeString];
@@ -129,7 +138,7 @@
 	}
 	
 	
-	NSString *authHeader = [NSString stringWithFormat:@"%@:%@", [formValues valueForKey:@"user"], [formValues valueForKey:@"pass"]];
+	NSString *authHeader = [NSString stringWithFormat:@"%@:%@", login, password];
 	NSData *authData = [authHeader dataUsingEncoding:NSUTF8StringEncoding];
 	NSString *base64EncodedString = [authData base64EncodedString];
 	NSURL *url = [NSURL URLWithString:@"http://api.blip.pl/updates"];
@@ -138,7 +147,7 @@
 								 isFinishedSelector:@selector(sendFinished:) 
 											 method:@"POST" 
 										  autostart:NO] autorelease];
-		
+	
 	
 	NSDictionary *headers = [NSDictionary dictionaryWithObjectsAndKeys:@"0.02", @"X-Blip-API", @"ShareKit iPhone", @"User-Agent", [NSString stringWithFormat:@"Basic %@", base64EncodedString], @"Authorization",
 							 @"application/json", @"Accept", nil];
@@ -147,6 +156,45 @@
 	
 	[request start];
 	
+	[self sendDidStart];
+	
+	
+	
+}
+
+
+- (BOOL)send {
+	
+	
+	if ([self validateItem]) {
+		
+		
+		[self startRequestWithLogin:[self getAuthValueForKey:@"user"] password:[self getAuthValueForKey:@"pass"]];	
+		
+		return YES;
+		
+	}
+	
+	else {
+		return NO;
+	}
+
+	
+	
+}
+
+
+
+- (void)authorizationFormValidate:(SHKFormController *)form {
+	
+	
+	if (!quiet) {
+		[[SHKActivityIndicator currentIndicator] displayActivity:@"Aktualizacja Blipa"];
+	}
+	
+	NSDictionary *formValues = [form formValues];
+	
+	[self startRequestWithLogin:[formValues valueForKey:@"user"] password:[formValues valueForKey:@"pass"]];
 	
 	
 	
@@ -157,42 +205,47 @@
 
 -(void)sendFinished:(SHKRequest *)request {
 	
+	//NSLog([self.request getResult]);
+	
 	[[SHKActivityIndicator currentIndicator] hide];
 	
 	if (self.request.success) {
 		
-		[pendingForm saveForm];
 		
+		[self sendDidFinish];		
 		
 	}
 	
 	else {
 		
-		if (self.request.success) {
+		NSString *msg;
+		
+		if ([[self.request getResult] isEqualToString:@"401 Unauthorized"]) {
 			
-			UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Błąd" 
-															message:@"Status zaktualizowany pomyślnie!" 
-														   delegate:nil 
-												  cancelButtonTitle:@"OK" 
-												  otherButtonTitles:nil];
-			[alert show];
-			[alert release];
-			
+			msg = [NSString stringWithString:@"Błędne dane logowania!"];
 			
 		}
+		
+		else {
+			
+			msg = [NSString stringWithString:@"Próba połączenia z serwisem blip.pl nieudana."];
+			
+		}
+		
+		
+		
 		UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Błąd" 
-								   message:@"Nastąpił błąd z połączeniem do serwisu blip.pl." 
-								  delegate:nil 
-						 cancelButtonTitle:@"OK" 
-						 otherButtonTitles:nil];
+														message:msg
+													   delegate:nil 
+											  cancelButtonTitle:@"OK" 
+											  otherButtonTitles:nil];
 		[alert show];
 		[alert release];
 		
 	}
-
 	
-
-	//NSLog([request getResult]);
+	
+	
 	
 	
 }
