@@ -9,7 +9,7 @@
 //  of this software and associated documentation files (the "Software"), to deal
 //  in the Software without restriction, including without limitation the rights
 //  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-//  copies of the Software, and to permit persons to whom the Software is
+//  copies of the Software, and to permit persons to towhom the Software is
 //  furnished to do so, subject to the following conditions:
 //
 //  The above copyright notice and this permission notice shall be included in
@@ -96,8 +96,8 @@
 	// This example form shows a username and password and stores them by the keys 'username' and 'password'.
 	
 	return [NSArray arrayWithObjects:
-			[SHKFormFieldSettings label:@"Login" key:@"user" type:SHKFormFieldTypeText start:nil],
-			[SHKFormFieldSettings label:@"Hasło" key:@"pass" type:SHKFormFieldTypePassword start:nil],			
+			[SHKFormFieldSettings label:SHKLocalizedString(@"Username") key:@"user" type:SHKFormFieldTypeText start:nil],
+			[SHKFormFieldSettings label:SHKLocalizedString(@"Password") key:@"pass" type:SHKFormFieldTypePassword start:nil],			
 			nil];
 } 
 
@@ -107,7 +107,7 @@
 	
 	
 	
-	return SHKLocalizedString(@"Załóż darmowe konto @ %@", @"www.blip.pl");
+	return SHKLocalizedString(@"Create a free account at %@", @"www.blip.pl");
 	
 	
 }
@@ -117,7 +117,7 @@
 	
 	
 	if (!quiet) {
-		[[SHKActivityIndicator currentIndicator] displayActivity:@"Aktualizacja Blipa"];
+		[[SHKActivityIndicator currentIndicator] displayActivity:SHKLocalizedString(@"Update status")];
 	}
 	
 	NSString *whatToShare;
@@ -149,7 +149,7 @@
 										  autostart:NO] autorelease];
 	
 	
-	NSDictionary *headers = [NSDictionary dictionaryWithObjectsAndKeys:@"0.02", @"X-Blip-API", @"ShareKit iPhone", @"User-Agent", [NSString stringWithFormat:@"Basic %@", base64EncodedString], @"Authorization",
+	NSDictionary *headers = [NSDictionary dictionaryWithObjectsAndKeys:@"0.02", @"X-Blip-API", @"ShareKit", @"User-Agent", [NSString stringWithFormat:@"Basic %@", base64EncodedString], @"Authorization",
 							 @"application/json", @"Accept", nil];
 	
 	[request setHeaderFields:headers];
@@ -189,7 +189,8 @@
 	
 	
 	if (!quiet) {
-		[[SHKActivityIndicator currentIndicator] displayActivity:@"Aktualizacja Blipa"];
+		
+		[[SHKActivityIndicator currentIndicator] displayActivity:SHKLocalizedString(@"Updating status")];
 	}
 	
 	NSDictionary *formValues = [form formValues];
@@ -222,19 +223,19 @@
 		
 		if ([[self.request getResult] isEqualToString:@"401 Unauthorized"]) {
 			
-			msg = [NSString stringWithString:@"Błędne dane logowania!"];
+			msg = [NSString stringWithString:SHKLocalizedString(@"Incorrect username and password")];
 			
 		}
 		
 		else {
 			
-			msg = [NSString stringWithString:@"Próba połączenia z serwisem blip.pl nieudana."];
+			msg = [NSString stringWithString:SHKLocalizedString(@"Unable to connect to blip.pl. Try again later.")];
 			
 		}
 		
 		
 		
-		UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Błąd" 
+		UIAlertView *alert = [[UIAlertView alloc] initWithTitle:SHKLocalizedString(@"Error") 
 														message:msg
 													   delegate:nil 
 											  cancelButtonTitle:@"OK" 
@@ -243,8 +244,6 @@
 		[alert release];
 		
 	}
-	
-	
 	
 	
 	
